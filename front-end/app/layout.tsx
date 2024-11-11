@@ -1,4 +1,5 @@
-import AuthProvider from "../context/AuthContext"
+import './globals.css';
+import AuthProvider from "./context/AuthContext";
 
 export const metadata = {
   title: 'Next.js',
@@ -12,8 +13,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
-        <AuthProvider>{children}</AuthProvider>
+      <body className="w-full h-full">
+        <AuthProvider>
+          {children}
+        </AuthProvider>
       </body>
     </html>
   )
