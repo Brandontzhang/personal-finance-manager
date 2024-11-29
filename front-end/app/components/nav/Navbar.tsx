@@ -1,5 +1,7 @@
+'use client';
+
 import { useAuth0 } from "@auth0/auth0-react";
-import { useClick, useFloating, useInteractions } from "@floating-ui/react";
+import { useClick, useDismiss, useFloating, useInteractions } from "@floating-ui/react";
 import LoginButton from "@/app/components/auth/LoginButton";
 import UserOptionsDropdown from "./UserOptionsDropdown";
 import { useState } from "react";
@@ -14,8 +16,10 @@ const Navbar = () => {
     onOpenChange: setIsOpen,
   });
   const click = useClick(context);
+  const dismiss = useDismiss(context);
   const { getReferenceProps, getFloatingProps } = useInteractions([
     click,
+    dismiss
   ]);
 
   return (
@@ -24,12 +28,12 @@ const Navbar = () => {
       <div className="flex flex-row">
         {!isAuthenticated && <LoginButton />}
 
-        {!isLoading && isAuthenticated &&
+        {!isLoading && user?.picture &&
           <img
             ref={refs.setReference}
             className="w-8 h-8 m-2 rounded-full"
-            src={user?.picture}
-            alt={user?.name}
+            src={user.picture}
+            alt={user.name}
             {...getReferenceProps()}
           />
         }

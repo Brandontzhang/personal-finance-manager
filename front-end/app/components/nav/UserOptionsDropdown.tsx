@@ -2,7 +2,7 @@ import { Ref, CSSProperties } from 'react';
 import LogoutButton from '../auth/LogoutButton';
 import { useAuth0 } from '@auth0/auth0-react';
 import Link from 'next/link';
-import { FaRegUser, FaSignOutAlt, FaUser } from 'react-icons/fa';
+import { FaRegUser } from 'react-icons/fa';
 import { PiSignOut } from 'react-icons/pi';
 
 interface UserOptionsDropdownProps {
@@ -21,7 +21,7 @@ const UserOptionsDropdown: React.FC<UserOptionsDropdownProps> = ({ ref, styles }
       className='mt-4 rounded-md border border-slate-100 shadow-md'
     >
       <div className='flex flex-col items-start space-y-6 p-4'>
-        {!isLoading &&
+        {!isLoading && user?.picture &&
           <div className='flex flex-row justify-stretch space-x-4 items-center'>
             <img className="w-8 h-8 rounded-full" src={user?.picture} alt={user?.name} />
             <div className='flex flex-col'>
