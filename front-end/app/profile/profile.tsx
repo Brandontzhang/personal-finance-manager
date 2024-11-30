@@ -6,20 +6,20 @@ import { useEffect, useState } from "react";
 import PlaidLink from "../components/plaid/PlaidLink";
 
 const Profile = () => {
-  const { user } = useAuth0();
+  const { user, isAuthenticated } = useAuth0();
 
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     setTimeout(() => {
-      if (!user) {
+      if (!isAuthenticated) {
         router.push("/");
       } else {
         setIsLoading(false);
       }
-    }, 0);
-  }, []);
+    }, 500);
+  }, [isAuthenticated]);
 
   if (isLoading) {
     return (

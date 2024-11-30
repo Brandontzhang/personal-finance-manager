@@ -8,6 +8,7 @@ const config = getAuthConfig();
 const providerConfig = {
   domain: config.domain,
   clientId: config.clientId,
+  cacheLocation: 'localstorage',
   //onRedirectCallback,
   authorizationParams: {
     redirect_uri: config.redirecUri,
