@@ -5,6 +5,7 @@ import { useClick, useDismiss, useFloating, useInteractions } from "@floating-ui
 import LoginButton from "@/app/components/auth/LoginButton";
 import UserOptionsDropdown from "./UserOptionsDropdown";
 import { useState } from "react";
+import { redirect } from "next/navigation";
 
 const Navbar = () => {
   const { isAuthenticated, user, isLoading } = useAuth0();
@@ -24,7 +25,7 @@ const Navbar = () => {
 
   return (
     <nav className="w-full flex flex-row justify-between p-4 stretch items-center h-12 bg-slate-50">
-      <span>Personal Finance</span>
+      <span className="hover:cursor-pointer" onClick={() => redirect('/')}>Personal Finance</span>
       <div className="flex flex-row">
         {!isAuthenticated && <LoginButton />}
 

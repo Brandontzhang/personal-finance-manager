@@ -49,7 +49,7 @@ const PlaidLink = () => {
   }, []);
 
   return (
-    <button onClick={() => open()} disabled={!ready}>
+    <button className="w-fit shadow shadow-slate-500 py-2 px-16 rounded bg-gray-900 hover:bg-gray-800 text-white" onClick={() => open()} disabled={!ready}>
       Link through Plaid
     </button>
   )
