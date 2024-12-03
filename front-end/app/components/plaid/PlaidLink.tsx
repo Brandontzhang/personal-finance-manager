@@ -4,13 +4,33 @@ import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
 import { usePlaidLink } from "react-plaid-link";
 
+const serverLink = "http://localhost:8000/plaid/api";
+
 const PlaidLink = () => {
   const [loading, setLoading] = useState(false);
   const [linkToken, setLinkToken] = useState("");
 
+  useEffect(() => {
+    const getLinkToken = async () => {
+      try {
+        setLoading(true);
+        // 1. Temporary token to activate Plaid link
+        const { data } = await axios.post(`${serverLink}/create_link_token`);
+        setLinkToken(data.link_token);
+      } catch (err) {
+        console.log(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    getLinkToken();
+  }, []);
+
   const onSuccess = useCallback(async (public_token: string) => {
     try {
-      const response = await fetch('http://localhost:8000/api/set_access_token', {
+      // 2. Using the link token to exchange for a permanent access token for the User's item
+      const response = await fetch(`${serverLink}/set_access_token`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -32,25 +52,9 @@ const PlaidLink = () => {
 
   const { open, ready } = usePlaidLink(config);
 
-  useEffect(() => {
-    const getLinkToken = async () => {
-      try {
-        setLoading(true);
-        const { data } = await axios.post('http://localhost:8000/api/create_link_token');
-        setLinkToken(data.link_token);
-      } catch (err) {
-        console.log(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    getLinkToken();
-  }, []);
-
   return (
     <button className="w-fit shadow shadow-slate-500 py-2 px-16 rounded bg-gray-900 hover:bg-gray-800 text-white" onClick={() => open()} disabled={!ready}>
-      Link through Plaid
+      Connect with Plaid
     </button>
   )
 };

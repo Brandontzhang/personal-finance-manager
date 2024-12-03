@@ -1,37 +1,23 @@
-import express from 'express';
-import bodyParser from 'body-parser';
-import cors from 'cors';
-import dotenv from 'dotenv';
-import { Configuration, PlaidApi, Products, PlaidEnvironments } from 'plaid';
+import express from "express";
 import axios from 'axios';
+import moment from 'moment';
+import { Configuration, PlaidApi, Products, PlaidEnvironments } from 'plaid';
 
-const app = express();
-app.use(
-  bodyParser.urlencoded({
-    extended: false,
-  }),
-);
-app.use(bodyParser.json());
-app.use(cors());
-dotenv.config();
+export const router = express.Router();
 
-const APP_PORT = process.env.APP_PORT || 8000;
 const PLAID_CLIENT_ID = process.env.PLAID_CLIENT_ID;
 const PLAID_SECRET = process.env.PLAID_SECRET;
 const PLAID_ENV = process.env.PLAID_ENV || 'sandbox';
-
 
 const PLAID_PRODUCTS = (process.env.PLAID_PRODUCTS || Products.Transactions).split(',',);
 const PLAID_COUNTRY_CODES = (process.env.PLAID_COUNTRY_CODES || 'US').split(',',);
 const PLAID_REDIRECT_URI = process.env.PLAID_REDIRECT_URI || '';
 
-// Store in secure persistent data store
-let ACCESS_TOKEN = null;
+let ACCESS_TOKEN = "";
 let USER_TOKEN = null;
 let PUBLIC_TOKEN = null;
 let ITEM_ID = null;
 let ACCOUNT_ID = null;
-
 
 const configuration = new Configuration({
   basePath: PlaidEnvironments[PLAID_ENV],
@@ -46,13 +32,9 @@ const configuration = new Configuration({
 
 const client = new PlaidApi(configuration);
 
-// Define a simple route
-app.get('/', (req, res) => {
-  res.send('Hello from Express!');
-});
-
-app.post('/api/create_link_token', async (req, res) => {
-  const configs = {
+// Plaid Auth - get token
+router.post('/api/create_link_token', async (_req, res) => {
+  const configs: any = {
     user: {
       client_user_id: 'user-id'
     },
@@ -79,7 +61,7 @@ app.post('/api/create_link_token', async (req, res) => {
   }
 });
 
-app.post('/api/set_access_token', async (req, res) => {
+router.post('/api/set_access_token', async (req, res) => {
   try {
     const body = {
       "client_id": PLAID_CLIENT_ID,
@@ -108,19 +90,15 @@ app.post('/api/set_access_token', async (req, res) => {
   }
 });
 
-app.get('/api/accounts', async (req, res, next) => {
+// Store in secure persistent data store
+router.get('/api/accounts', async (_req, res) => {
   try {
-    const accountsResponse = await client.accountsGet({
-      access_token: ACCESS_TOKEN,
+    const accounts = await client.accountsGet({
+      access_token: ACCESS_TOKEN
     });
 
-    res.json(accountsResponse.data);
+    res.json(accounts);
   } catch (err) {
-    return res.json(err.response);
+    res.send(err);
   }
-});
-
-// Start the server
-app.listen(APP_PORT, () => {
-  console.log(`Server listening on port ${APP_PORT}`);
 });

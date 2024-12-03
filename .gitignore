@@ -1,11 +1,15 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-# dependencies
-/back-end/node_modules
+# env
+/front-end/.env
 /back-end/.env
 
+# build
+/back-end/dist
+
+# dependencies
+/back-end/node_modules
 /front-end/node_modules
-/front-end/.env
 /node_modules
 /.pnp
 .pnp.*
