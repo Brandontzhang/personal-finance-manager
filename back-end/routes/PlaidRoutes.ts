@@ -1,9 +1,11 @@
 import express from "express";
 import axios from 'axios';
 import moment from 'moment';
+import dotenv from 'dotenv';
 import { Configuration, PlaidApi, Products, PlaidEnvironments } from 'plaid';
 
 export const router = express.Router();
+dotenv.config();
 
 const PLAID_CLIENT_ID = process.env.PLAID_CLIENT_ID;
 const PLAID_SECRET = process.env.PLAID_SECRET;
@@ -34,6 +36,7 @@ const client = new PlaidApi(configuration);
 
 // Plaid Auth - get token
 router.post('/api/create_link_token', async (_req, res) => {
+  console.log(configuration);
   const configs: any = {
     user: {
       client_user_id: 'user-id'
